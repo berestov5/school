@@ -22,9 +22,13 @@ public class StudentService {
         return studentRepository.findById(id).orElse(null);
     }
 
-    public Student editStudent(Student student){
-        return studentRepository.save(student);
+    public Student editStudent(Student student) {
+        if (studentRepository.existsById(student.getId())) {
+            return studentRepository.save(student);
+        }
+        return null;
     }
+
     public void deleteStudent(long id) {
         studentRepository.deleteById(id);
     }
