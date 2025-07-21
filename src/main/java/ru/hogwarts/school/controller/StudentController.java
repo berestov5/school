@@ -8,6 +8,7 @@ import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -22,6 +23,11 @@ public class StudentController {
     @ResponseStatus(HttpStatus.CREATED)
     public Student addStudent(@RequestBody Student student) {
         return studentService.addStudent(student.getId(), student);
+    }
+
+    @GetMapping("/filter-by-age")
+    public List<Student> findByAgeBetween(@RequestParam int min, @RequestParam int max) {
+        return studentService.findByAgeBetween(min, max);
     }
 
     @GetMapping("/{id}")
