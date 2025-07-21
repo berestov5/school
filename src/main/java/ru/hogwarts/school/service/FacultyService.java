@@ -1,6 +1,8 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 
@@ -28,7 +30,7 @@ public class FacultyService {
         if (facultyRepository.existsById(faculty.getId())) {
             return facultyRepository.save(faculty);
         }
-        return null;
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     public void deleteFaculty(long id) {
