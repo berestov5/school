@@ -32,10 +32,10 @@ public class FacultyController {
         return facultyService.findByNameOrColorIgnoreCase(search);
     }
 
-//    @GetMapping("/{id}/students")
-//    public List<Student> getStudentsByFacultyId(@PathVariable long id) {
-//        return facultyService.getStudentsByFacultyId(id);
-//    }
+    @GetMapping("/{id}/students")
+    public List<Student> getStudentsByFacultyId(@PathVariable long id) {
+        return facultyService.getStudentsByFacultyId(id);
+    }
 
     @GetMapping("/{id}")
     public Faculty getFaculty(@PathVariable long id) {
