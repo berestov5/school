@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.*;
@@ -16,6 +17,17 @@ public class FacultyService {
 
     public FacultyService(FacultyRepository facultyRepository) {
         this.facultyRepository = facultyRepository;
+    }
+
+    public List<Faculty> findByNameOrColorIgnoreCase(String search) {
+        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(search, search);
+    }
+
+    public List<Student> getStudentsByFacultyId(long facultyId) {
+        return facultyRepository.findById(facultyId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,("Faculty not found")))
+                .getStudents();
     }
 
     public Faculty addFaculty(Faculty faculty) {
