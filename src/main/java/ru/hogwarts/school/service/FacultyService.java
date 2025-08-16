@@ -39,7 +39,7 @@ public class FacultyService {
     }
 
     public Faculty editFaculty(Faculty faculty) {
-        if (facultyRepository.existsById(faculty.getId())) {
+        if (faculty != null || facultyRepository.existsById(faculty.getId())) {
             return facultyRepository.save(faculty);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);

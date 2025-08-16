@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,11 +21,24 @@ public class FacultyControllerTestWithTestRestTemplate {
     @LocalServerPort
     private int port;
 
+//    @Autowired
+//    private FacultyController facultyController;
+
     @Autowired
     private TestRestTemplate restTemplate;
 
     private String getBaseUrl() {
         return "http://localhost:" + port + "/faculty";
+    }
+
+//    @Test
+//    void contextLoads() throws Exception {
+//        Assertions.assertThat(facultyController).isNotNull();
+//    }
+
+    @Test
+    public void testFaculty() throws Exception {
+        Assertions.assertThat(this.restTemplate.getForObject(getBaseUrl(), String.class).contains("Я люблю тебя жизнь!"));
     }
 
     @Test

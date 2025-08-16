@@ -1,14 +1,18 @@
 package ru.hogwarts.school.controller;
 
+import netscape.javascript.JSObject;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Arrays;
@@ -17,6 +21,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(FacultyController.class)
@@ -25,13 +30,22 @@ public class FacultyControllerWithWebMvcTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private FacultyService facultyService;
+    FacultyService facultyService;
+//    @MockBean
+//    FacultyRepository facultyRepository;
+//
+//    @SpyBean
+//    private FacultyService facultyService;
 
     @InjectMocks
     private FacultyController facultyController;
 
     @Test
     void addFaculty_shouldReturnFacultyAndStatusCreated() throws Exception {
+        JSONObject facultyObject = new JSONObject();
+        facultyObject.put("name", "Первый");
+        facultyObject.put("color", "Red");
+
         Faculty faculty = new Faculty(1L, "Первый", "Red");
 
         when(facultyService.addFaculty(any(Faculty.class))).thenReturn(faculty);
@@ -39,7 +53,7 @@ public class FacultyControllerWithWebMvcTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/faculty")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"name\":\"Первый\",\"color\":\"Red\"}"))
+                        .content(facultyObject.toString()))//"{\"id\":1,\"name\":\"Первый\",\"color\":\"Red\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Первый"))
                 .andExpect(jsonPath("$.color").value("Red"))
@@ -68,7 +82,7 @@ public class FacultyControllerWithWebMvcTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/faculty")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"name\":\"Hufflepuff\",\"color\":\"Blue\"}"))
+                        .content("{\"id\":1,\"name\":\"Третий\",\"color\":\"Blue\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Третий"))
                 .andExpect(jsonPath("$.color").value("Blue"));
