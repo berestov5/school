@@ -10,11 +10,17 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
+
+import static org.hibernate.grammars.hql.HqlParser.LIMIT;
 
 @Service
 public class StudentService {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
+
+    private static final String TARGET_LETTER = "A";
 
     private final StudentRepository studentRepository;
 
@@ -25,6 +31,40 @@ public class StudentService {
     public int getStudentsCount() {
         logger.info("Was invoked method for getStudentsCount");
         return studentRepository.countAllStudents();
+    }
+
+    // Шаг 1: Имена студентов на букву "А" в верхнем регистре, отсортированные
+    public List<String> getStudentNamesStartingWithA() {
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .filter(name -> name.startsWith(TARGET_LETTER))
+                .map(String::toUpperCase)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    // Шаг 2: Средний возраст всех студентов
+    public Double getAverageAge() {
+        return studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0.0);
+    }
+
+    // Шаг 3: Самое длинное название факультета
+    public String getLongestFacultyName() {
+        return studentRepository.findAll().stream()
+                .filter(student -> student != null && student.getFaculty().getName() != null)
+                .map(Student::getFaculty)
+                .map(Faculty::getName)
+                .reduce((f1, f2) -> f1.length() >= f2.length() ? f1 : f2)
+                .orElse("");
+    }
+
+    public long calculateOptimizedSum() {
+        return LongStream.rangeClosed(1, 1_000_000)
+                .parallel()
+                .reduce(0, Long::sum);
     }
 
     public double getStudentsAverageAge() {
