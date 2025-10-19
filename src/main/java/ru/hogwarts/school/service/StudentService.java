@@ -13,8 +13,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
-import static org.hibernate.grammars.hql.HqlParser.LIMIT;
-
 @Service
 public class StudentService {
 
@@ -33,7 +31,6 @@ public class StudentService {
         return studentRepository.countAllStudents();
     }
 
-    // Шаг 1: Имена студентов на букву "А" в верхнем регистре, отсортированные
     public List<String> getStudentNamesStartingWithA() {
         return studentRepository.findAll().stream()
                 .map(Student::getName)
@@ -43,7 +40,6 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
-    // Шаг 2: Средний возраст всех студентов
     public Double getAverageAge() {
         return studentRepository.findAll().stream()
                 .mapToInt(Student::getAge)
@@ -51,7 +47,6 @@ public class StudentService {
                 .orElse(0.0);
     }
 
-    // Шаг 3: Самое длинное название факультета
     public String getLongestFacultyName() {
         return studentRepository.findAll().stream()
                 .filter(student -> student != null && student.getFaculty().getName() != null)

@@ -20,7 +20,6 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    // Шаг 1: Эндпоинт для имен студентов на букву "А"
     @GetMapping("/names-starting-with-a")
     @Operation(summary = "Get student names starting with A")
     public ResponseEntity<List<String>> getStudentNamesStartingWithA() {
@@ -28,7 +27,6 @@ public class StudentController {
         return ResponseEntity.ok(names);
     }
 
-    // Шаг 2: Эндпоинт для среднего возраста
     @GetMapping("/another-average-age")
     @Operation(summary = "Get average age of all students")
     public ResponseEntity<Double> getAverageAge() {
@@ -36,7 +34,6 @@ public class StudentController {
         return ResponseEntity.ok(averageAge);
     }
 
-    // Шаг 3: Эндпоинт для самого длинного названия факультета
     @GetMapping("/longest-faculty")
     @Operation(summary = "Get the longest faculty name")
     public ResponseEntity<String> getLongestFacultyName() {
