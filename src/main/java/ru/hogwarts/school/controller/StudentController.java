@@ -20,6 +20,28 @@ public class StudentController {
         this.studentService = studentService;
     }
 
+    @GetMapping("/print-parallel")
+    @Operation(summary = "Параллельная печать имен студентов")
+    public ResponseEntity<String> printStudentsParallel() {
+        try {
+            studentService.printStudentsParallel();
+            return ResponseEntity.ok("Параллельная печать завершена");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Ошибка: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/print-synchronized")
+    @Operation(summary = "Синхронизированная печать имен студентов")
+    public ResponseEntity<String> printStudentsSynchronized() {
+        try {
+            studentService.printStudentsSynchronized();
+            return ResponseEntity.ok("Синхронизированная печать завершена");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Ошибка: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/names-starting-with-a")
     @Operation(summary = "Get student names starting with A")
     public ResponseEntity<List<String>> getStudentNamesStartingWithA() {
