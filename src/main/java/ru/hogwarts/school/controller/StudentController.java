@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,34 @@ public class StudentController {
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
+    }
+
+    @GetMapping("/names-starting-with-a")
+    @Operation(summary = "Get student names starting with A")
+    public ResponseEntity<List<String>> getStudentNamesStartingWithA() {
+        List<String> names = studentService.getStudentNamesStartingWithA();
+        return ResponseEntity.ok(names);
+    }
+
+    @GetMapping("/another-average-age")
+    @Operation(summary = "Get average age of all students")
+    public ResponseEntity<Double> getAverageAge() {
+        Double averageAge = studentService.getAverageAge();
+        return ResponseEntity.ok(averageAge);
+    }
+
+    @GetMapping("/longest-faculty")
+    @Operation(summary = "Get the longest faculty name")
+    public ResponseEntity<String> getLongestFacultyName() {
+        String longestFaculty = studentService.getLongestFacultyName();
+        return ResponseEntity.ok(longestFaculty);
+    }
+
+    @GetMapping("/optimized-sum")
+    @Operation(summary = "Calculate optimized sum from 1 to 1,000,000")
+    public ResponseEntity<Long> getOptimizedSum() {
+        long sum = studentService.calculateOptimizedSum();
+        return ResponseEntity.ok(sum);
     }
 
     @GetMapping("/count")

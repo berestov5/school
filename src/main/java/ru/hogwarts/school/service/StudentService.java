@@ -10,11 +10,15 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 @Service
 public class StudentService {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
+
+    private static final String TARGET_LETTER = "A";
 
     private final StudentRepository studentRepository;
 
@@ -25,6 +29,37 @@ public class StudentService {
     public int getStudentsCount() {
         logger.info("Was invoked method for getStudentsCount");
         return studentRepository.countAllStudents();
+    }
+
+    public List<String> getStudentNamesStartingWithA() {
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .filter(name -> name.startsWith(TARGET_LETTER))
+                .map(String::toUpperCase)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public Double getAverageAge() {
+        return studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0.0);
+    }
+
+    public String getLongestFacultyName() {
+        return studentRepository.findAll().stream()
+                .filter(student -> student != null && student.getFaculty().getName() != null)
+                .map(Student::getFaculty)
+                .map(Faculty::getName)
+                .reduce((f1, f2) -> f1.length() >= f2.length() ? f1 : f2)
+                .orElse("");
+    }
+
+    public long calculateOptimizedSum() {
+        return LongStream.rangeClosed(1, 1_000_000)
+                .parallel()
+                .reduce(0, Long::sum);
     }
 
     public double getStudentsAverageAge() {
