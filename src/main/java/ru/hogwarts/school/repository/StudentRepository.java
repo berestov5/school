@@ -20,4 +20,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query("SELECT s FROM Student s ORDER BY s.id DESC LIMIT 5")
     List<Student> findLastFiveStudents();
+
+    @Query("SELECT s FROM Student s ORDER BY s.id LIMIT 6")
+    List<Student> findFirstSixStudents();
 }

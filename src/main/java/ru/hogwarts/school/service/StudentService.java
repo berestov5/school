@@ -22,8 +22,81 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
 
+    private final Object printLock = new Object();
+
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
+    }
+
+    public List<Student> getFirstSixStudents() {
+        return studentRepository.findFirstSixStudents();
+    }
+
+    public void printStudentsParallel() {
+        List<Student> students = getFirstSixStudents();
+
+        printName(students.get(0).getName());
+        printName(students.get(1).getName());
+
+        Thread thread1 = new Thread(() -> {
+            printName(students.get(2).getName());
+            printName(students.get(3).getName());
+        });
+
+        Thread thread2 = new Thread(() -> {
+            printName(students.get(4).getName());
+            printName(students.get(5).getName());
+        });
+
+        executeThreads(thread1, thread2);
+    }
+
+    public void printStudentsSynchronized() {
+        List<Student> students = getFirstSixStudents();
+
+        printStudentNameSynchronized(students.get(0).getName());
+        printStudentNameSynchronized(students.get(1).getName());
+
+        Thread thread1 = new Thread(() -> {
+            printStudentNameSynchronized(students.get(2).getName());
+            printStudentNameSynchronized(students.get(3).getName());
+        });
+
+        Thread thread2 = new Thread(() -> {
+            printStudentNameSynchronized(students.get(4).getName());
+            printStudentNameSynchronized(students.get(5).getName());
+        });
+
+        executeThreads(thread1, thread2);
+    }
+
+    private void executeThreads(Thread thread1, Thread thread2) {
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Ошибка при выполнении потоков", e);
+        }
+    }
+
+    private void printName(String studentName) {
+        System.out.println(studentName);
+    }
+
+    public void printStudentNameSynchronized(String studentName) {
+        synchronized (printLock) {
+            System.out.println(studentName);
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
     public int getStudentsCount() {
